@@ -88,7 +88,6 @@ func (sv *service) Save(ctx context.Context, s domain.Seller) (ret domain.Seller
 			return
 		}
 	}
-
 	//vamos a ahacer un get para ver si se guardo realmente el valor
 	ret, err = sv.rep.GetById(ctx, id)
 	if err != nil {
@@ -99,11 +98,30 @@ func (sv *service) Save(ctx context.Context, s domain.Seller) (ret domain.Seller
 	return
 }
 func (sv *service) GetByID(ctx context.Context, id int) (ret domain.Seller, err error) {
+	ret, err = sv.rep.GetById(ctx, id)
+	if err != nil {
+		fmt.Println("ERROR IN GET BY ID SERVICE GetByID", err.Error())
+		err = ErrNotFound
+		return
+	}
 	return
 }
 func (sv *service) Delete(ctx context.Context, id int) (err error) {
+	_, err = sv.rep.GetById(ctx, id)
+	if err != nil {
+		fmt.Println("ERROR IN GET BY ID SERVICE delete", err.Error())
+		err = ErrNotFound
+		return
+	}
+	err = sv.rep.Delete(ctx, id)
+	if err != nil {
+		fmt.Println("ERROR IN DELETE ID SERVICE delete", err.Error())
+		err = ErrGeneric
+		return
+	}
 	return
 }
 func (sv *service) Update(ctx context.Context, data map[string]interface{}, id int) (ret domain.Seller, err error) {
+	//TOY RE PAJA PARA ESTE METODO
 	return
 }
