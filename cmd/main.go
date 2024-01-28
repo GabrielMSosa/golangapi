@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GabrielMSosa/crud-api/cmd/server/routes"
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 	//abrimos la conexion con la DB
-	db, err := sql.Open("mysql", "DSN")
+	db, err := sql.Open("mysql", "root@tcp(127.0.0.1:3306)/melisprint")
 	if err != nil {
 		panic(err)
 	}
@@ -27,5 +28,11 @@ func main() {
 	HOST := "localhost:8080"
 	docs.SwaggerInfo.Host = HOST
 	eng.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	router := routes.NewRouter(eng, db)
+	router.MapRoutes()
+	if err := eng.Run("localhost:8080"); err != nil {
+		panic(err)
+	}
 
 }
